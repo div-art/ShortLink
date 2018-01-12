@@ -1,0 +1,23 @@
+{
+    "name": "div-art/shortlink",
+    "description": "A Laravel5.5 shortener package",
+    "require": {
+        "guzzlehttp/guzzle": "6.*"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Div-Art",
+            "email": "info@div-art.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "DivArt\\ShortLink\\": "src/"
+        },
+        "files": [
+            "src/functions.php"
+        ]
+    },
+    "minimum-stability": "dev"
+}
