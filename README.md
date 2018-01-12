@@ -29,7 +29,7 @@ Also in `config/app.php`, add the Facade class to the `aliases` array:
 
 ## Configuration
 
-To publish Shorty's configuration file, run the following `vendor:publish` command:
+To publish ShortLink's configuration file, run the following `vendor:publish` command:
 
 ```
 php artisan vendor:publish --provider="DivArt\ShortLink\ShortLinkServiceProvider"
