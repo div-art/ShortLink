@@ -11,6 +11,10 @@ $ composer require div-art/shortlink
 
 Then in config/app.php add the following to the providers array:
 
+```
+\DivArt\ShortLink\ShortLinkServiceProvider::class,
+```
+
 Then in `config/app.php` add the following to the `providers` array:
 
 ```
