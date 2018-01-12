@@ -63,6 +63,16 @@ $url = https://goo.gl/Njku;
 ShortLink::googleStats($url);
 ```
 
+## Methods
+
+``` php
+ShortLink::google();
+
+ShortLink::googleStatistics();
+
+ShortLink::bitly();
+```
+
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
