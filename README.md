@@ -54,7 +54,7 @@ To get stats of clicks on shortened URL:
 ``` php
 $url = https://goo.gl/Njku;
 
-ShortLink::googleStats($url);
+ShortLink::clicks($url);
 ```
 
 ## Methods
@@ -62,9 +62,11 @@ ShortLink::googleStats($url);
 ``` php
 ShortLink::google();
 
-ShortLink::googleStatistics();
+ShortLink::clicks();
 
 ShortLink::bitly();
+
+ShortLink::rebrandly();
 ```
 
 ## License
