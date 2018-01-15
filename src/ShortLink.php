@@ -4,116 +4,96 @@ namespace DivArt\ShortLink;
 
 use DivArt\ShortLink\Interfaces\ShortLinkAbstractInterface;
 use DivArt\ShortLink\Exceptions\InvalidApiResponseException;
+use DivArt\ShortLink\Services\Bitly;
+use DivArt\ShortLink\Services\Google;
+use DivArt\ShortLink\Services\Rebrandly;
+use DivArt\ShortLink\Services\Service;
 
-class ShortLink extends ShortLinkAbstractInterface
+class ShortLink
 {
+
     /**
-     * Converts a long URL into a short URL with the bit.ly/XXXXX format.
+     * Returns a short url using the bitly service
      *
      * @param $longUrl
-     * @param string $method
-     * @return mixed
+     * @param bool $withProtocol
+     * @return string
      * @throws InvalidApiResponseException
      */
-    public function bitly($longUrl, $method = 'post')
+    public function bitly($longUrl, $withProtocol = true)
     {
-        if (config('shortlink.bitly_api_url') == 'your_bitly_api_url' || config('shortlink.bitly_api_url') == null) {
-            throw new InvalidApiResponseException('Use valid bitly api url in config/shortlink.php');
-        }
+        $bitly = new Bitly();
 
-        $client = new \GuzzleHttp\Client(['base_uri' => config('shortlink.bitly_api_url')]);
-
-        $response = $client->request(strtoupper($method), config('shortlink.bitly_api_url'), [
-            'query' => [
-                'longUrl' => $longUrl,
-                'access_token' => config('shortlink.bitly_api_key'),
-            ],
-        ]);
-
-        $result = json_decode($response->getBody());
-
-        return $result->data->url;
+        return $bitly->bitly($longUrl, $withProtocol);
     }
 
     /**
-     * Converts a long URL into a short URL with the goo.gl/XXXXX format.
-     *
-     * @param $longUrl
-     * @param string $method
-     * @return mixed
-     * @throws InvalidApiResponseException
-     */
-    public function google($longUrl, $method = 'post')
-    {   
-        if (config('shortlink.google_api_url') == 'your_google_api_url' || config('shortlink.google_api_url') == null) {
-            throw new InvalidApiResponseException('Use valid google api url in config/shortlink.php');
-        }
-
-        if (config('shortlink.google_api_key') == 'your_google_api_key' || config('shortlink.google_api_key') == null) {
-            throw new InvalidApiResponseException('Use valid google api key in config/shortlink.php');
-        }
-
-        $client = new \GuzzleHttp\Client(['base_uri' => config('shortlink.google_api_url')]);
-
-        $response = $client->request(strtoupper($method), config('shortlink.google_api_url'), [
-            'headers' => [
-                'Content-Type' => 'application/json',
-            ],
-            'query' => [
-                'key' => config('shortlink.google_api_key')
-            ],
-            'body' => json_encode(array('longUrl' => $longUrl))
-        ]);
-
-        $result = json_decode($response->getBody());
-
-        return $result->id;
-    }
-
-    /**
-     * Return google clicks stats
+     * Returns a long url using the bitly service
      *
      * @param $shortUrl
-     * @param string $method
      * @return mixed
      * @throws InvalidApiResponseException
      */
-    public function googleStats($shortUrl, $method = 'get')
+    public function bitlyExpand($shortUrl)
     {
-        if (config('shortlink.google_api_url') == 'your_google_api_url' || config('shortlink.google_api_url') == null) {
-            throw new InvalidApiResponseException('Use valid google api url in config/shortlink.php');
-        }
+        $bitly = new Bitly();
 
-        if (config('shortlink.google_api_key') == 'your_google_api_key' || config('shortlink.google_api_key') == null) {
-            throw new InvalidApiResponseException('Use valid google api key in config/shortlink.php');
-        }
-
-        $client = new \GuzzleHttp\Client(['base_uri' => config('shortlink.google_api_url')]);
-
-        $response = $client->request(strtoupper($method), config('shortlink.google_api_url'), [
-            'query' => [
-                'key' => config('shortlink.google_api_key'),
-                'shortUrl' => $shortUrl,
-                'projection' => 'ANALYTICS_CLICKS'
-            ],
-        ]);
-
-        $result = json_decode($response->getBody());
-
-        return $result->analytics->allTime->shortUrlClicks;
+        return $bitly->bitlyExpand($shortUrl);
     }
 
     /**
-     * Shortens the long given URL using default or given api
+     * Returns the click statistics
+     * based on the service on which the link is made
      *
-     * @param $url
-     * @param null $api
-     * @return mixed|string
+     * @param $shortUrl
+     * @return mixed
+     */
+    public function clicks($shortUrl)
+    {   
+        $servise = new Service();
+
+        return $servise->clicks($shortUrl);
+    }
+
+    /**
+     * Returns a short url using the google service
+     *
+     * @param $longUrl
+     * @param bool $withProtocol
+     * @return string
      * @throws InvalidApiResponseException
      */
-    public function make($url, $api = null)
+    public function google($longUrl, $withProtocol = true)
+    {   
+        $google = new Google();
+
+        return $google->google($longUrl, $withProtocol);
+    }
+
+    /**
+     * Returns a short url using the rebrandly service
+     *
+     * @param $longUrl
+     * @return string
+     * @throws InvalidApiResponseException
+     */
+    public function rebrandly($longUrl)
+    {   
+        $rebrandly = new Rebrandly();
+
+        return $rebrandly->rebrandly($longUrl);
+    }
+
+    /**
+     * Calls the method specified in the configuration
+     *
+     * @param $url
+     * @return string
+     * @throws InvalidApiResponseException
+     */
+    public function make($url)
     {
-        $api ? $api : $api = config('shortlink.default_api');
+        $api = config('shortlink.driver');
 
         switch ($api) {
             case 'google':
@@ -121,6 +101,9 @@ class ShortLink extends ShortLinkAbstractInterface
                 break;
             case 'bitly':
                 return $this->bitly($url);
+                break;
+            case 'rebrandly':
+                return $this->rebrandly($url);
                 break;
             default:
                 return 'This api not found!';

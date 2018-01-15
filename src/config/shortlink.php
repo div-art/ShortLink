@@ -7,49 +7,51 @@ return [
     | Default api
     |--------------------------------------------------------------------------
     |
-    | Supported: 'google', 'bitly'
+    | Supported: 'google', 'bitly', 'rebrandly'
     |
     */
-    'default_api' => env('DEFAULT_SHORTLINK_API', 'google'),
+    'driver' => env('SHORTLINK_DRIVER', 'google'),
 
     /*
     |--------------------------------------------------------------------------
-    | Google api URL
+    | Google api
     |--------------------------------------------------------------------------
     |
-    | This is google shortener api url using for aplication.
+    | This is Google shortener api url and key using for aplication.
     |
     */
-    'google_api_url' => env('SHORTLINK_GOOGLE_URL', 'your_google_api_url'),
+    'google' => [
+        'url' => env('SHORTLINK_GOOGLE_URL', 'https://www.googleapis.com/urlshortener/v1/url'),
+        'key' => env('SHORTLINK_GOOGLE_KEY', 'your_google_api_key'),
+    ],
 
     /*
     |--------------------------------------------------------------------------
-    | Google api key
+    | Bitly api
     |--------------------------------------------------------------------------
     |
-    | This is google shortener api key using for aplication.
+    | This is Bitly shortener api url and key using for aplication.
     |
     */
-    'google_api_key' => env('SHORTLINK_GOOGLE_KEY', 'your_google_api_key'),
+    'bitly' => [
+        'url' => env('SHORTLINK_BITLY_URL', 'https://api-ssl.bitly.com/v3/shorten'),
+        'key' => env('SHORTLINK_BITLY_KEY', 'your_bitly_api_key'),
+        'clicks' => env('SHORTLINK_BITLY_CLICKS', 'https://api-ssl.bitly.com/v3/link/clicks'),
+        'expand' => env('SHORTLINK_BITLY_CLICKS', 'https://api-ssl.bitly.com/v3/expand'),
+    ],
 
     /*
     |--------------------------------------------------------------------------
-    | Bitly api URL
+    | Rebrandly api
     |--------------------------------------------------------------------------
     |
-    | This is bitly shortener api url using for aplication.
+    | This is Rebrandly shortener api url and key using for aplication.
     |
     */
-    'bitly_api_url' => env('SHORTLINK_BITLY_URL', 'your_bitly_api_url'),
+    'rebrandly' => [
+        'url' => env('SHORTLINK_REBRANDLY_URL', 'https://api.rebrandly.com/v1/links'),
+        'key' => env('SHORTLINK_REBRANDLY_KEY', '7958a3c2e3714b429c58b69dd7ea77b3'),
+    ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Bitly api key
-    |--------------------------------------------------------------------------
-    |
-    | This is bitly shortener api key using for aplication.
-    |
-    */
-    'bitly_api_key' => env('SHORTLINK_BITLY_KEY', 'your_bitly_api_key'),
 
 ];
