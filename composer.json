@@ -30,5 +30,7 @@
             }
         }
     },
-    "minimum-stability": "dev"
+    "repositories": {
+        "packagist": { "url": "https://packagist.org", "type": "composer" }
+    }
 }
