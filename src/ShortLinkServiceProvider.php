@@ -14,7 +14,7 @@ class ShortLinkServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . "/src/config/shortlink.php" => config_path('shortlink.php'),
+            __DIR__ . "/config/shortlink.php" => config_path('shortlink.php'),
         ]);
     }
 
@@ -25,8 +25,7 @@ class ShortLinkServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('short_link', function ()
-        {
+        $this->app->bind('short_link', function () {
             return new ShortLink;
         });
     }
