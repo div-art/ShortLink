@@ -13,7 +13,9 @@ class ShortLinkServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->publishes([
+            __DIR__ . "/src/config/shortlink.php" => config_path('shortlink.php'),
+        ]);
     }
 
     /**
@@ -27,22 +29,5 @@ class ShortLinkServiceProvider extends ServiceProvider
         {
             return new ShortLink;
         });
-
-        $this->registerPublishables();
-    }
-
-    public function registerPublishables()
-    {
-        $basePath = dirname(__DIR__);
-
-        $arrPublishable = [
-            'config' => [
-                $basePath . "/src/config/shortlink.php" => config_path('shortlink.php'),
-            ]
-        ];
-
-        foreach ($arrPublishable as $group => $paths) {
-            $this->publishes($paths, $group);
-        }
     }
 }
