@@ -20,6 +20,16 @@
             "src/functions.php"
         ]
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "DivArt\\ShortLink\\ShortLinkServiceProvider"
+            ],
+            "aliases": {
+                "ShortLink": "DivArt\\ShortLink\\Facades\\ShortLink"
+            }
+        }
+    },
     "repositories": {
         "packagist": { "url": "https://packagist.org", "type": "composer" }
     }
