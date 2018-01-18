@@ -34,11 +34,11 @@ class ShortLink
      * @return mixed
      * @throws InvalidApiResponseException
      */
-    public function bitlyExpand($shortUrl)
+    public function expand($shortUrl)
     {
-        $bitly = new Bitly();
+        $servise = new Service();
 
-        return $bitly->bitlyExpand($shortUrl);
+        return $servise->expand($shortUrl);
     }
 
     /**
@@ -74,39 +74,42 @@ class ShortLink
      * Returns a short url using the rebrandly service
      *
      * @param $longUrl
+     * @param bool $withProtocol
      * @return string
      * @throws InvalidApiResponseException
      */
-    public function rebrandly($longUrl)
+    public function rebrandly($longUrl, $withProtocol = true)
     {   
         $rebrandly = new Rebrandly();
 
-        return $rebrandly->rebrandly($longUrl);
+        return $rebrandly->rebrandly($longUrl, $withProtocol);
     }
 
     /**
      * Calls the method specified in the configuration
      *
      * @param $url
+     * @param bool $withProtocol
      * @return string
      * @throws InvalidApiResponseException
      */
-    public function make($url)
+    public function make($url, $withProtocol = true)
     {
         $api = config('shortlink.driver');
 
         switch ($api) {
             case 'google':
-                return $this->google($url);
+                return $this->google($url, $withProtocol);
                 break;
             case 'bitly':
-                return $this->bitly($url);
+                return $this->bitly($url, $withProtocol);
                 break;
             case 'rebrandly':
-                return $this->rebrandly($url);
+                return $this->rebrandly($url, $withProtocol);
                 break;
             default:
-                return 'This api not found!';
+                throw new InvalidApiResponseException('This api not found!');
+                break;
         }
     }
 }

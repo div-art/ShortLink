@@ -25,7 +25,7 @@ class ShortLinkServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('short_link', function () {
+        $this->app->bind('shortLink', function () {
             return new ShortLink;
         });
     }

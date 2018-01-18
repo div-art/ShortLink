@@ -1,8 +1,11 @@
 <?php
 
-if (!function_exists('short_link')) {
-    function short_link()
+/**
+ * Create function shortLink if it is not exists
+ */
+if ( ! function_exists('shortLink')) {
+    function shortLink()
     {
-        return app('short_link');
+        return app('shortLink');
     }
 }

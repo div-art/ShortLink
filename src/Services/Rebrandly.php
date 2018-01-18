@@ -24,26 +24,33 @@ class Rebrandly extends Service
      * Returns a short url
      *
      * @param $longUrl
+     * @param bool $withProtocol
      * @return string
      * @throws InvalidApiResponseException
      */
-    public function rebrandly($longUrl)
+    public function rebrandly($longUrl, $withProtocol = true)
     {   
         $this->exceptions();
 
-        $response = $this->client->request('POST', config('shortlink.rebrandly.url'), [
+        $this->validation(func_get_args()[0]);
+
+        $response = $this->client->request('POST', config('shortlink.rebrandly.url') . '/links', [
             'headers' => [
                 'Content-Type' => 'application/json',
             ],
             'query' => [
                 'apikey' => config('shortlink.rebrandly.key')
             ],
-            'body' => json_encode(array('destination' => $longUrl))
+            'body' => json_encode(['destination' => $longUrl])
         ]);
 
         $result = json_decode($response->getBody());
 
-        return $result->shortUrl;
+        if ($withProtocol == false) {
+            return $result->shortUrl;
+        }
+
+        return 'https://' . $result->shortUrl;
     }
 
     /**
@@ -56,14 +63,14 @@ class Rebrandly extends Service
     {   
         //$this->exceptions();
 
-        $response = $this->client->request('POST', config('shortlink.rebrandly.url'), [
+        $response = $this->client->request('POST', config('shortlink.rebrandly.url') . '/links', [
             'headers' => [
                 'Content-Type' => 'application/json',
             ],
             'query' => [
                 'apikey' => config('shortlink.rebrandly.key')
             ],
-            'body' => json_encode(array('destination' => $shortUrl))
+            'body' => json_encode(['destination' => $shortUrl])
         ]);
 
         $result = json_decode($response->getBody());

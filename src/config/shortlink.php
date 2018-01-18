@@ -21,7 +21,7 @@ return [
     |
     */
     'google' => [
-        'url' => env('SHORTLINK_GOOGLE_URL', 'https://www.googleapis.com/urlshortener/v1/url'),
+        'url' => env('SHORTLINK_GOOGLE_URL', 'https://www.googleapis.com/urlshortener/v1'),
         'key' => env('SHORTLINK_GOOGLE_KEY', 'your_google_api_key'),
     ],
 
@@ -34,10 +34,8 @@ return [
     |
     */
     'bitly' => [
-        'url' => env('SHORTLINK_BITLY_URL', 'https://api-ssl.bitly.com/v3/shorten'),
+        'url' => env('SHORTLINK_BITLY_URL', 'https://api-ssl.bitly.com/v3'),
         'key' => env('SHORTLINK_BITLY_KEY', 'your_bitly_api_key'),
-        'clicks' => env('SHORTLINK_BITLY_CLICKS', 'https://api-ssl.bitly.com/v3/link/clicks'),
-        'expand' => env('SHORTLINK_BITLY_CLICKS', 'https://api-ssl.bitly.com/v3/expand'),
     ],
 
     /*
@@ -49,7 +47,7 @@ return [
     |
     */
     'rebrandly' => [
-        'url' => env('SHORTLINK_REBRANDLY_URL', 'https://api.rebrandly.com/v1/links'),
+        'url' => env('SHORTLINK_REBRANDLY_URL', 'https://api.rebrandly.com/v1'),
         'key' => env('SHORTLINK_REBRANDLY_KEY', 'your_rebrandly_api_key'),
     ],
 

@@ -1,5 +1,5 @@
 # ShortLink
-Short Link package for Laravel
+Short Link package for Laravel 5.5
 
 ## Installation
 
@@ -60,14 +60,24 @@ ShortLink::clicks($url);
 ## Methods
 
 ``` php
-ShortLink::google();
+ShortLink::google(); // return shortener url like goo.gl/XXXXXX
 
-ShortLink::clicks();
+ShortLink::bitly(); // return shortener url like bit.ly/XXXXXX
 
-ShortLink::bitly();
+ShortLink::rebrandly(); // return shortener url like rebrand.ly/XXXXXX
 
-ShortLink::rebrandly();
+ShortLink::clicks(); // return count of clicks on a shortener url
+
+ShortLink::expand(); // return long url
 ```
+
+## Services
+
+[goo.gl](https://developers.google.com/url-shortener/)
+
+[bit.ly](https://dev.bitly.com/)
+
+[rebrand.ly](https://developers.rebrandly.com/)
 
 ## License
 

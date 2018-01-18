@@ -29,28 +29,34 @@ class Google extends Service
      * @throws InvalidApiResponseException
      */
     public function google($longUrl, $withProtocol = true)
-    {   
+    {
         $this->exceptions();
 
-        $response = $this->client->request('POST', config('shortlink.google.url'), [
+        $this->validation(func_get_args()[0]);
+
+        $response = $this->client->request('POST', config('shortlink.google.url') . '/url', [
             'headers' => [
                 'Content-Type' => 'application/json',
             ],
             'query' => [
                 'key' => config('shortlink.google.key')
             ],
-            'body' => json_encode(array('longUrl' => $longUrl))
+            'body' => json_encode(['longUrl' => $longUrl])
         ]);
 
         $result = json_decode($response->getBody());
 
-        if ($withProtocol == false) {
-            $shortLink = parse_url($result->id);
-
-            return $shortLink['host'] . $shortLink['path'];
-        }
-
-        return $result->id;
+        switch ($response->getStatusCode()) {
+            case '200':
+                $result = json_decode($response->getBody());
+                if ($withProtocol == false) {
+                    $shortLink = parse_url($result->id);
+        
+                    return $shortLink['host'] . $shortLink['path'];
+                }
+                return $result->id;
+                break;
+        }  
     }
 
     /**
@@ -65,7 +71,9 @@ class Google extends Service
     {
         $this->exceptions();
 
-        $response = $this->client->request('GET', config('shortlink.google.url'), [
+        $this->validation(func_get_args());
+
+        $response = $this->client->request('GET', config('shortlink.google.url') . '/url', [
             'query' => [
                 'key' => config('shortlink.google.key'),
                 'shortUrl' => $shortUrl,

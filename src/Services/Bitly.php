@@ -18,10 +18,6 @@ class Bitly extends Service
         if (config('shortlink.bitly.key') == 'your_bitly_api_key' || config('shortlink.bitly.key') == null) {
             throw new InvalidApiResponseException('Use valid bitly api key in config/shortlink.php');
         }
-
-        if (config('shortlink.bitly.clicks') == 'your_bitly_clicks_url' || config('shortlink.bitly.clicks') == null) {
-            throw new InvalidApiResponseException('Use valid bitly api clicks url in config/shortlink.php');
-        }
     }
 
     /**
@@ -36,7 +32,9 @@ class Bitly extends Service
     {
         $this->exceptions();
 
-        $response = $this->client->request('POST', config('shortlink.bitly.url'), [
+        $this->validation(func_get_args()[0]);
+
+        $response = $this->client->request('POST', config('shortlink.bitly.url') . '/shorten', [
             'query' => [
                 'longUrl' => $longUrl,
                 'access_token' => config('shortlink.bitly.key'),
@@ -44,14 +42,22 @@ class Bitly extends Service
         ]);
 
         $result = json_decode($response->getBody());
+        
+        switch ($result->status_code) {
+            case '200':
+                if ($withProtocol == false) {
+                    $shortLink = parse_url($result->data->url);
 
-        if ($withProtocol == false) {
-            $shortLink = parse_url($result->data->url);
+                    return $shortLink['host'] . $shortLink['path'];
+                }
 
-            return $shortLink['host'] . $shortLink['path'];
-        }
-
-        return $result->data->url;
+                return $result->data->url;
+                break;
+            case '500':
+                throw new InvalidApiResponseException("Response $result->status_code: $result->status_txt");
+            case '503':
+                throw new InvalidApiResponseException("Response $result->status_code: $result->status_txt");
+        }     
     }
 
     /**
@@ -61,11 +67,11 @@ class Bitly extends Service
      * @return mixed
      * @throws InvalidApiResponseException
      */
-    public function bitlyExpand($shortUrl)
+    public function expand($shortUrl)
     {
         $this->exceptions();
 
-        $response = $this->client->request('GET', config('shortlink.bitly.expand'), [
+        $response = $this->client->request('GET', config('shortlink.bitly.url') . '/expand', [
             'query' => [
                 'access_token' => config('shortlink.bitly.key'),
                 'shortUrl' => $shortUrl,
@@ -73,7 +79,7 @@ class Bitly extends Service
         ]);
 
         $result = json_decode($response->getBody());
-
+ 
         return $result->data->expand[0]->long_url;
     }
 
@@ -88,7 +94,7 @@ class Bitly extends Service
     {
         $this->exceptions();
 
-        $response = $this->client->request('GET', config('shortlink.bitly.clicks'), [
+        $response = $this->client->request('GET', config('shortlink.bitly.url') . '/link/clicks', [
             'query' => [
                 'access_token' => config('shortlink.bitly.key'),
                 'link' => $shortUrl,

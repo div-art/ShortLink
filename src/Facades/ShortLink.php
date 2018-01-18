@@ -11,6 +11,6 @@ class ShortLink extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'short_link';
+        return 'shortLink';
     }
 }
