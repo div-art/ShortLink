@@ -2,10 +2,12 @@
     "name": "div-art/shortlink",
     "description": "A Laravel 5.5 shortener package",
     "require": {
+        "php": "^7.*",
         "guzzlehttp/guzzle": "6.*",
         "illuminate/support": "~5"
     },
     "license": "MIT",
+    "keywords": ["shortlink", "div-art", "laravel"],
     "authors": [
         {
             "name": "Div-Art",
