@@ -35,29 +35,51 @@ class Bitly extends Service
         $this->validation(func_get_args()[0]);
 
         $response = $this->client->request('POST', config('shortlink.bitly.url') . '/shorten', [
-            'query' => [
-                'longUrl' => $longUrl,
-                'access_token' => config('shortlink.bitly.key'),
+            'headers' => [
+				'Authorization' => 'Bearer '.config('shortlink.bitly.key'),
+				'Content-Type' => 'application/json',
+			],
+            'json' => [
+                'long_url' => $longUrl,
             ],
         ]);
 
         $result = json_decode($response->getBody());
-        
-        switch ($result->status_code) {
+        $status_code = $response->getStatusCode();
+        $status_text = $response->getReasonPhrase();
+
+        switch ($status_code) {
             case '200':
                 if ($withProtocol == false) {
-                    $shortLink = parse_url($result->data->url);
-
-                    return $shortLink['host'] . $shortLink['path'];
+                    $bitly = $result->id;
+                } else {
+                    $bitly = $result->link;
                 }
 
-                return $result->data->url;
+                return $bitly;
                 break;
+            case '201':
+                if ($withProtocol == false) {
+                    $bitly = $result->id;
+                } else {
+                    $bitly = $result->link;
+                }
+
+                return $bitly;
+                break;
+            case '400':
+                throw new InvalidApiResponseException("Response $status_code: $status_text");
+            case '403':
+                throw new InvalidApiResponseException("Response $status_code: $status_text");
+            case '417':
+                throw new InvalidApiResponseException("Response $status_code: $status_text");
+            case '422':
+                throw new InvalidApiResponseException("Response $status_code: $status_text");
             case '500':
-                throw new InvalidApiResponseException("Response $result->status_code: $result->status_txt");
+                throw new InvalidApiResponseException("Response $status_code: $status_text");
             case '503':
-                throw new InvalidApiResponseException("Response $result->status_code: $result->status_txt");
-        }     
+                throw new InvalidApiResponseException("Response $status_code: $status_text");
+        }
     }
 
     /**
@@ -71,16 +93,19 @@ class Bitly extends Service
     {
         $this->exceptions();
 
-        $response = $this->client->request('GET', config('shortlink.bitly.url') . '/expand', [
-            'query' => [
-                'access_token' => config('shortlink.bitly.key'),
-                'shortUrl' => $shortUrl,
+        $response = $this->client->request('POST', config('shortlink.bitly.url') . '/expand', [
+            'headers' => [
+				'Authorization' => 'Bearer '.config('shortlink.bitly.key'),
+				'Content-Type' => 'application/json',
+			],
+            'json' => [
+                'bitlink_id' => $shortUrl,
             ],
         ]);
 
         $result = json_decode($response->getBody());
- 
-        return $result->data->expand[0]->long_url;
+
+        return $result->long_url;
     }
 
     /**

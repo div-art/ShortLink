@@ -34,7 +34,7 @@ return [
     |
     */
     'bitly' => [
-        'url' => env('SHORTLINK_BITLY_URL', 'https://api-ssl.bitly.com/v3'),
+        'url' => env('SHORTLINK_BITLY_URL', 'https://api-ssl.bitly.com/v4'),
         'key' => env('SHORTLINK_BITLY_KEY', 'your_bitly_api_key'),
     ],
 
