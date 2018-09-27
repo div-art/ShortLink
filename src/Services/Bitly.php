@@ -34,6 +34,11 @@ class Bitly extends Service
 
         $this->validation(func_get_args()[0]);
 
+        $url = parse_url($longUrl);
+        if ( ! isset($url['scheme'])) {
+            $longUrl = 'http://' . $longUrl;
+        }
+
         $response = $this->client->request('POST', config('shortlink.bitly.url') . '/shorten', [
             'headers' => [
 				'Authorization' => 'Bearer '.config('shortlink.bitly.key'),
