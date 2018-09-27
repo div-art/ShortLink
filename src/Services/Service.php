@@ -62,17 +62,8 @@ class Service
     {
         $url = $this->isProtocol($shortUrl);
 
-        $service = parse_url($url);
-
-        switch($service['host']) {
-            case 'bit.ly':
-                $bitly = new Bitly();
-                return $bitly->expand($url);
-                break;
-            default:
-                throw new InvalidApiResponseException('Sorry, this service is not supported yet.');
-                break;
-        }
+        $bitly = new Bitly();
+        return $bitly->expand($url);
     }
 
     /**
@@ -85,8 +76,9 @@ class Service
     {
         $url = parse_url($shortUrl);
 
-        if ( ! isset($url['scheme'])) {
-            return 'https://' . $shortUrl;
+        if (isset($url['scheme'])) {
+            $shortUrl = str_replace('https://', '', $shortUrl);
+            return $shortUrl;
         }
 
         return $shortUrl;
